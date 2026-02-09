@@ -1,0 +1,11 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: "canary-rollback"
+
+receivers:
+  - name: "canary-rollback"
+    webhook_configs:
+      - url: "http://gateway:9000/internal/rollback/canary?secret=super-secret-rollback-key"
+        send_resolved: false

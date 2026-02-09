@@ -1,0 +1,25 @@
+{
+  "ReRoutes": [
+    {
+      "DownstreamPathTemplate": "/api/resources", // Backend API path
+      "UpstreamPathTemplate": "/resources", // Gateway path
+      "DownstreamScheme": "https", // Backend scheme (http or https)
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5001 // Backend API port
+        }
+      ],
+      "QoSOptions": {
+        "TimeoutValue": 5000
+      },
+      "RateLimitOptions": {
+        "ClientRateLimit": 100, // Rate limit per client (tenant)
+        "Period": "1h" // Rate limit period (1 hour)
+      }
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:5000" // API Gateway base URL
+  }
+}

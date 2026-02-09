@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/Monitoring/">
+    <File Path="Prometheus.yml" />
+  </Folder>
+  <Folder Name="/Monitoring/Alerts/">
+    <File Path="alertmanager.yml" />
+    <File Path="saas-alerts.yml" />
+  </Folder>
+  <Folder Name="/Src/">
+    <Project Path="SaaS.Platform.API/SaaS.Platform.API.csproj" />
+    <Project Path="SaaS.Platform.Application/SaaS.Platform.Application.csproj" />
+    <Project Path="SaaS.Platform.Domain/SaaS.Platform.Domain.csproj" />
+    <Project Path="SaaS.Platform.Infrastructure/SaaS.Platform.Infrastructure.csproj" />
+    <Project Path="SaaS.Platform.Shared/SaaS.Platform.Shared.csproj" />
+  </Folder>
+  <Folder Name="/Tests/" />
+  <Project Path="LoadTest/LoadTest.csproj" />
+  <Project Path="SaaS.Platform.Gateway/SaaS.Platform.Gateway.csproj" Id="3f5d7487-65fc-4156-8ea2-e92c70b4ecb8" />
+</Solution>

@@ -1,0 +1,95 @@
+﻿groups:
+  - name: saas-platform-advanced-alerts
+    rules:
+
+      - alert: RateLimitExceeded
+        expr: |
+          rate(http_requests_total{status="429"}[1m]) > 20
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Rate limit exceeded frequently"
+          description: "Too many 429 responses in the last minute"
+
+      - alert: TenantRequestSpike
+        expr: |
+          sum by (tenant) (
+            rate(tenant_requests_total[1m])
+          ) > 200
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Tenant request spike"
+          description: "Tenant {{ $labels.tenant }} is sending too many requests"
+
+      - alert: HighLatencyP95
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum by (le) (
+              rate(http_request_duration_seconds_bucket[5m])
+            )
+          ) > 1.5
+        for: 3m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High API latency (p95)"
+          description: "95th percentile latency is above 1.5s"
+
+      - alert: CanaryErrorSpike
+        expr: |
+          rate(canary_errors_total[1m])
+          /
+          rate(canary_requests_total[1m]) > 0.05
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Canary error rate too high"
+          description: "Canary error rate exceeded 5%, rollback required"
+
+  - name: saas-platform-core-alerts
+    rules:
+
+      - alert: ApiDown
+        expr: up{job="saas-platform-api"} == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "API is DOWN"
+          description: "SaaS Platform API unreachable for 30 seconds"
+
+      - alert: HighErrorRate
+        expr: |
+          rate(http_requests_total{status=~"5.."}[1m])
+          /
+          rate(http_requests_total[1m]) > 0.05
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High 5xx error rate"
+          description: "More than 5% of requests are failing"
+
+      - alert: TenantRateLimitSpike
+        expr: |
+          rate(tenant_rate_limit_exceeded_total[1m]) > 5
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Tenant rate limit exceeded"
+          description: "Tenants are hitting rate limit frequently"
+
+      - alert: TenantQuotaExceeded
+        expr: tenant_quota_exceeded_total > 0
+        for: 10s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Tenant quota exceeded"
+          description: "One or more tenants exceeded quota"

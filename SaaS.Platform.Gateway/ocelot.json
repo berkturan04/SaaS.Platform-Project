@@ -1,0 +1,53 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "https",
+
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "api-v1",
+          "Port": 7152,
+          "Weight": 95
+        },
+        {
+          "Host": "api-v2",
+          "Port": 7153,
+          "Weight": 5
+        }
+      ],
+
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      },
+
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "GatewayJwt"
+      },
+
+      "AddHeadersToRequest": {
+        "X-Tenant-Id": "{Claims:tenantId}",
+        "X-Canary": "{Claims:canary}"
+      },
+
+      "RateLimitOptions": {
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "Limit": 5
+      },
+
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "DurationOfBreak": 10000,
+        "TimeoutValue": 3000
+      }
+    }
+  ],
+
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:9000"
+  }
+}
